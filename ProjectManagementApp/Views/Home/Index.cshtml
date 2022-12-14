@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Final Exam for Bart Simpson (Student #: 123456)";
+}
+
+<p>
+    <a asp-controller="Project" asp-action="GetAllProjects">View all projects</a>
+    <span class="mx-1">|</span>
+    <a asp-controller="Project" asp-action="GetAddProjectRequest">Add a new project</a>
+</p>
+<div class="row">
+    <div class="col-sm-6">
+        <vc:recently-completed-tasks number-of-tasks-to-display="5" />
+    </div>
+    <div class="col-sm-6">
+        <vc:in-progress-tasks number-of-tasks-to-display="5"></vc:in-progress-tasks>
+    </div>
+</div>

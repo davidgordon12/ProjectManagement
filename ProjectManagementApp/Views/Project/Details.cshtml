@@ -1,0 +1,125 @@
+﻿@model ProjectDetails
+@{
+    ViewData["Title"] = "Manage your project";
+}
+
+<last-action-message></last-action-message>
+<div class="mb-3">
+    <a asp-controller="Project" asp-action="GetAllProjects">All projects</a>
+    <span class="mx-1">|</span>
+    <a asp-controller="Project" asp-action="GetAddProjectRequest">Add new project</a>
+    <span class="mx-1">|</span>
+    <a asp-controller="Project" asp-action="GetEditRequestById" asp-route-id="@Model.Project.ProjectId">Edit this project</a>
+</div>
+
+<div>
+    <p class="h6">Project summary:</p>
+    <p>The project @Model.Project.Name was created on @Model.Project.DateCreated.Value.ToString("dd/MM/yyyy")</p>
+</div>
+<div class="row g-3 align-items-center">
+    <div>Ongoing tasks: @Model.Ongoing.Count | Completed tasks: @Model.Completed.Count | Cancelled tasks: @Model.Cancelled.Count</div>
+</div>
+
+<hr class="border border-primary border-1 opacity-75" />
+
+<div class="row">
+    <div class="col-sm-9">
+        <p class="h6">Employees on this project:</p>
+        <table class="table table-striped">
+            <thead class="fw-bold">
+                <tr>
+                    <th>Name</th>
+                    <th>Employee Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var employee in Model.Project.Employees)
+                {
+                    <tr>
+                        <td>@employee.FullName</td>
+                        <td>@employee.EmployeeNumber</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-sm-3">
+        <form asp-action="CreateEmployee" asp-controller="Project" method="post">
+            <input type="hidden" asp-for="@Model.Employee.ProjectId" value="@Model.Project.ProjectId" />
+            <div class="form-group">
+                <label class="form-label">First Name</label>
+                <input class="form-control" asp-for="@Model.Employee.FirstName"/>
+                <span class="text-danger" asp-validation-for="@Model.Employee.FirstName"></span>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Last Name</label>
+                <input class="form-control" asp-for="@Model.Employee.LastName"/>
+                <span class="text-danger" asp-validation-for="@Model.Employee.LastName"></span>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Employee Number</label>
+                <input class="form-control" asp-for="@Model.Employee.EmployeeNumber" />
+                <span class="text-danger" asp-validation-for="@Model.Employee.EmployeeNumber"></span>
+            </div>
+            <button class="btn btn-success" type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+<hr class="border border-primary border-1 opacity-75" />
+
+<div class="row">
+    <div class="col-sm-9">
+        <p class="h6">Tasks for this project:</p>
+        <table class="table table-striped">
+            <thead class="fw-bold">
+                <tr>
+                    <th>Description</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var task in Model.Project.Tasks)
+                {
+                    <tr>
+                        <td>@task.Description</td>
+                        <td>@task.DueDate</td>
+                        <td>@task.TaskStatus</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-sm-3">
+        <form asp-action="CreateTask" asp-controller="Project" method="post">
+            <input type="hidden" asp-for="@Model.Task.ProjectId" value="@Model.Project.ProjectId" />
+            <div class="form-group">
+                <label class="form-label">Task Description</label>
+                <input class="form-control" asp-for="@Model.Task.Description" />
+                <span class="text-danger" asp-validation-for="@Model.Task.Description"></span>
+            </div>
+            <div class="form-group">
+                <label class="form-date">Due Date</label>
+                <input id="task-dtp" type="datetime" asp-for="@Model.Task.DueDate" />
+                <span class="text-danger" asp-validation-for="@Model.Task.DueDate"></span>
+            </div>
+            <button class="btn btn-success" type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+<hr class="border border-primary border-1 opacity-75" />
+
+<div>
+    <p>
+        Ideally this app would allow users to update task status and assign employees to tasks but in the 
+        interest of avoiding too much complexity on this exam we will ignore that for now &#128516;
+    </p>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }
